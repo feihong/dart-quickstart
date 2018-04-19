@@ -10,3 +10,9 @@ Source: https://www.dartlang.org/tools/sdk#install
 ## Running the server
 
     dart hello_world.dart
+
+## Compile snapshot for production
+
+    dart --snapshot=hello_world.dart.snapshot hello_world.dart
+
+Source: https://github.com/dart-lang/sdk/wiki/Snapshots
