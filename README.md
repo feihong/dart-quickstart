@@ -7,12 +7,17 @@
 
 Source: https://www.dartlang.org/tools/sdk#install
 
-## Running the server
+## Running a program
 
-    dart hello_world.dart
+    dart server.dart
 
 ## Compile snapshot for production
 
-    dart --snapshot=hello_world.dart.snapshot hello_world.dart
+    dart --snapshot=server.dart.snapshot server.dart
 
 Source: https://github.com/dart-lang/sdk/wiki/Snapshots
+
+## Links
+
+- [Language Tour](https://www.dartlang.org/guides/language/language-tour)
+- [Awesome Dart](https://github.com/yissachar/awesome-dart)
