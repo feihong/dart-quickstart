@@ -2,19 +2,20 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:math';
 
-var rand = new Random();
+var rand = Random();
 
 getRandomHanzi() {
   const start = 0x4e00, end = 0x9fff;
   const count = end - start + 1;
-
   var n = rand.nextInt(count) + start;
-  return new String.fromCharCode(n);
+  return String.fromCharCode(n);
 }
 
-Future main() async {
-  Map<string, string> env = Platform.environment;
-  int port = env['PORT'] == null ? 8000 : int.parse(env['PORT']);
+Future main(List<String> arguments) async {
+  var port = 8000;
+  if (arguments.length > 0) {
+    port = int.parse(arguments[0]);
+  }
   var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, port);
   print('Listening on localhost: ${server.port}');
 
@@ -22,7 +23,7 @@ Future main() async {
     var hanzi = getRandomHanzi();
 
     request.response.headers.contentType =
-      new ContentType('text', 'html', charset: 'utf-8');
+      ContentType('text', 'html', charset: 'utf-8');
 
     request.response
       ..write('<h1 style="font-size: 5rem">$hanzi</h1>')
