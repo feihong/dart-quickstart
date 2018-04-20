@@ -13,7 +13,9 @@ getRandomHanzi() {
 }
 
 Future main() async {
-  var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8000);
+  Map<string, string> env = Platform.environment;
+  int port = env['PORT'] == null ? 8000 : int.parse(env['PORT']);
+  var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, port);
   print('Listening on localhost: ${server.port}');
 
   await for (HttpRequest request in server) {
