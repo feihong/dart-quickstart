@@ -2,13 +2,13 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:math';
 
-var rand = Random();
+var rand = new Random();
 
 getRandomHanzi() {
   const start = 0x4e00, end = 0x9fff;
   const count = end - start + 1;
   var n = rand.nextInt(count) + start;
-  return String.fromCharCode(n);
+  return new String.fromCharCode(n);
 }
 
 Future main(List<String> arguments) async {
@@ -23,7 +23,7 @@ Future main(List<String> arguments) async {
     var hanzi = getRandomHanzi();
 
     request.response.headers.contentType =
-      ContentType('text', 'html', charset: 'utf-8');
+      new ContentType('text', 'html', charset: 'utf-8');
 
     request.response
       ..write("""<html>
