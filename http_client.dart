@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:uri/uri.dart';
 
 const appToken = '';
 const baseUrl = 'https://data.cityofchicago.org/resource/xqx5-8hwx.json';
@@ -15,13 +14,15 @@ String buildUrl() {
   license_start_date >= '$startDateStr' AND
   within_circle(location, 41.972116, -87.689468, 1600)
   """.replaceAll('\n', '');
-  final template = UriTemplate(baseUrl + r'{?app_token,where}');
-  // We need to replace here because UriTemplate is not able to accept param
-  // names that start with $.
-  var url = template.expand({"app_token": appToken, "where": query})
-    .replaceFirst('app_token=', r'$$app_token=')
-    .replaceFirst('where=', r'$where=');
-  return url;
+
+  // Normally we could use UriTemplate to build the query string, but that won't
+  // work for params starting with $.
+  final queryString = {r'$$app_token': appToken, r'$where': query}
+    .entries
+    .fold([], (acc, entry) =>
+      acc..add(entry.key + '=' + Uri.encodeComponent(entry.value)))
+    .join('&');
+  return baseUrl + '?' + queryString;
 }
 
 Future main() async {
