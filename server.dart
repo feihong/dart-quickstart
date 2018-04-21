@@ -26,7 +26,14 @@ Future main(List<String> arguments) async {
       ContentType('text', 'html', charset: 'utf-8');
 
     request.response
-      ..write('<h1 style="font-size: 5rem">$hanzi</h1>')
+      ..write("""<html>
+        <head>
+          <title>Random Hanzi</title>
+        </head>
+        <body>
+          <div style="font-size: 5rem">$hanzi</div>
+        </body>
+      </html>""")
       ..close();
   }
 }
