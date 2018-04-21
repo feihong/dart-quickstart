@@ -1,4 +1,6 @@
 name: quickstart
 dependencies:
-  ini: ^1.1.0
-  http: ^0.11.3+16
+  ini: "^1.1.0"
+  http: "^0.11.3+16"
+  intl: "^0.15.6"
+  uri: "^0.11.2"
