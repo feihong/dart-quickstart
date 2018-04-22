@@ -46,15 +46,18 @@ List<Map> processLine(String line) {
 }
 
 Future main() async {
-  var items = (await getFile())
+  var stream = (await getFile())
     .openRead()
     .transform(new GZipCodec().decoder)
     .transform(new Utf8Decoder())
     .transform(new LineSplitter())
-    .expand(processLine)
-    .forEach((item) => print(item));
+    .expand(processLine);
 
-  // await for (var line in lines) {
-  //   print(line);
+  var items = await stream.toList();
+  // for (var item in items) {
+  //   print(item);
   // }
+
+  await new File('hanzi.json').writeAsString(new JsonEncoder().convert(items));
+  print('Wrote ${items.length} items to hanzi.json');
 }
