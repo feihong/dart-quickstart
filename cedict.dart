@@ -40,6 +40,7 @@ List<Map> processLine(String line) {
   if (simp.length > 1) {
     return [];
   } else if (simp.codeUnitAt(0) <= 255) {
+    // Skip entries that aren't hanzi
     print('Skipped: $line');
     return [];
   } else {
@@ -61,11 +62,14 @@ Future main() async {
     .expand(processLine);
 
   var items = await stream.toList();
-  items.sort((a, b) =>a['hanzi'].compareTo(b['hanzi']));
+  items.sort((a, b) => a['hanzi'].compareTo(b['hanzi']));
   // for (var item in items) {
   //   print(item);
   // }
 
-  await new File('hanzi.json').writeAsString(new JsonEncoder().convert(items));
+  var file = new File('hanzi.json');
+  await file.writeAsString(new JsonEncoder().convert(items));
   print('\nWrote ${items.length} items to hanzi.json');
+  var size = (await file.length() / 1024).round();
+  print('Size of hanzi.json: $size KB');
 }
