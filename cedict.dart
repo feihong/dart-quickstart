@@ -11,7 +11,8 @@ Future<File> getFile() async {
   if (await file.exists()) {
     return file;
   } else {
-    var bytes =  await http.readBytes(url);
+    print('Downloading file...');
+    var bytes = await http.readBytes(url);
     await file.writeAsBytes(bytes);
     return file;
   }
@@ -21,20 +22,27 @@ RegExp lineExp = new RegExp(r'([^\s]+) ([^\s]+) \[(.+?)\] /(.+)/');
 
 processLine(String line) {
   Match match = lineExp.firstMatch(line);
-  if (match != null) {
-    print(match.groups([1,2,3,4]));
+  if (match == null) {
+    return null;
+  } else {
+    return {
+      'simplified': match.group(1),
+      'traditional': match.group(2),
+      'pinyin': match.group(3).toLowerCase(),
+      'gloss': match.group(4),
+    };
   }
-  return line;
 }
 
 Future main() async {
-  var lines = (await getFile())
+  var items = (await getFile())
     .openRead()
     .transform(new GZipCodec().decoder)
     .transform(new Utf8Decoder())
     .transform(new LineSplitter())
     .map(processLine)
-    .forEach((line) => print(line));
+    .where((item) => item != null && item['simplified'].length == 1)
+    .forEach((item) => print(item));
 
   // await for (var line in lines) {
   //   print(line);
