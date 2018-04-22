@@ -61,6 +61,7 @@ Future main() async {
     .expand(processLine);
 
   var items = await stream.toList();
+  items.sort((a, b) =>a['hanzi'].compareTo(b['hanzi']));
   // for (var item in items) {
   //   print(item);
   // }
