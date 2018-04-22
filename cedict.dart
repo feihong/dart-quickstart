@@ -17,15 +17,26 @@ Future<File> getFile() async {
   }
 }
 
+RegExp lineExp = new RegExp(r'([^\s]+) ([^\s]+) \[(.+?)\] /(.+)/');
+
+processLine(String line) {
+  Match match = lineExp.firstMatch(line);
+  if (match != null) {
+    print(match.groups([1,2,3,4]));
+  }
+  return line;
+}
+
 Future main() async {
-  var file = await getFile();
-  var inputStream = file.openRead();
-  var lines = inputStream
+  var lines = (await getFile())
+    .openRead()
     .transform(new GZipCodec().decoder)
     .transform(new Utf8Decoder())
-    .transform(new LineSplitter());
+    .transform(new LineSplitter())
+    .map(processLine)
+    .forEach((line) => print(line));
 
-  await for (var line in lines) {
-    print(line);
-  }
+  // await for (var line in lines) {
+  //   print(line);
+  // }
 }
