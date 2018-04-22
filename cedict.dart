@@ -1,3 +1,8 @@
+/*
+ * Download gzip file containg dictionary entries, filter out the
+ * multi-character entries and output a JSON file.
+ *
+ */
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
@@ -20,17 +25,23 @@ Future<File> getFile() async {
 
 RegExp lineExp = new RegExp(r'([^\s]+) ([^\s]+) \[(.+?)\] /(.+)/');
 
-processLine(String line) {
+List<Map> processLine(String line) {
   Match match = lineExp.firstMatch(line);
   if (match == null) {
-    return null;
+    return [];
+  } else if (match.group(1).length > 1) {
+    return [];
   } else {
-    return {
-      'simplified': match.group(1),
-      'traditional': match.group(2),
-      'pinyin': match.group(3).toLowerCase(),
-      'gloss': match.group(4),
-    };
+    var simp = match.group(1),
+        trad = match.group(2),
+        pinyin = match.group(3).toLowerCase(),
+        gloss = match.group(4),
+        result = [{'hanzi': simp, 'pinyin': pinyin, 'gloss': gloss}];
+
+    if (simp != trad) {
+      result.add({'hanzi': trad, 'pinyin': pinyin, 'gloss': gloss});
+    }
+    return result;
   }
 }
 
@@ -40,8 +51,7 @@ Future main() async {
     .transform(new GZipCodec().decoder)
     .transform(new Utf8Decoder())
     .transform(new LineSplitter())
-    .map(processLine)
-    .where((item) => item != null && item['simplified'].length == 1)
+    .expand(processLine)
     .forEach((item) => print(item));
 
   // await for (var line in lines) {
