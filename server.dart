@@ -13,9 +13,9 @@ String getRandomHanzi() {
 }
 
 Future<int> getPort() async {
-  var lines = await new File("server.ini").readAsLines();
+  var lines = await new File('server.ini').readAsLines();
   var cfg = new Config.fromStrings(lines);
-  return int.parse(cfg.get('default', "port"));
+  return int.parse(cfg.get('default', 'port'));
 }
 
 Future main() async {

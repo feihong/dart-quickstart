@@ -1,3 +1,4 @@
 *.snapshot
 .dart_tool
 .packages
+*.gz
